@@ -1,5 +1,7 @@
 # Wood Log
 
+## API reference
+
 WoodLog is a logger downed from wood.
 
 WoodLog is ridiculously simple structured and leveled logger based on
@@ -49,3 +51,15 @@ line number: d.go:23
         TRACE(map[string]interface{}) error
     }
 Public logger interface.
+
+## Usage
+
+	import bitbucket.org/I159/woodlog
+
+	logger, err := woodlog.New()
+
+	logger.INFO("User information.")
+	logger.DEBUG("Critical development inforamation.")
+	logger.ERROR("Critical admin information")
+	logger.TRACE("Regular development and admin information")
+	logger.FATAL("Fatal information and exit 1")

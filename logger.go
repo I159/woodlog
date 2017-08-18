@@ -139,7 +139,7 @@ func (l *Log) FATAL(slots map[string]interface{}) (err error) {
 }
 
 // New logger
-func New(level string) (logger *Log, err error) {
+func New() (logger *Log, err error) {
 	logger = &Log{
 		debug:  log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
 		info:   log.New(os.Stdout, "INFO: ", log.Lmicroseconds|log.Lshortfile),
