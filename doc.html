@@ -1,0 +1,330 @@
+<!--
+	Copyright 2009 The Go Authors. All rights reserved.
+	Use of this source code is governed by a BSD-style
+	license that can be found in the LICENSE file.
+-->
+<!--
+	Note: Static (i.e., not template-generated) href and id
+	attributes start with "pkg-" to make it impossible for
+	them to conflict with generated attributes (some of which
+	correspond to Go identifiers).
+-->
+
+	<script type='text/javascript'>
+	document.ANALYSIS_DATA = ;
+	document.CALLGRAPH = ;
+	</script>
+
+	
+		
+		<div id="short-nav">
+			<dl>
+			<dd><code>import "."</code></dd>
+			</dl>
+			<dl>
+			<dd><a href="#pkg-overview" class="overviewLink">Overview</a></dd>
+			<dd><a href="#pkg-index" class="indexLink">Index</a></dd>
+			
+			
+			</dl>
+		</div>
+		<!-- The package's Name is printed as title by the top-level template -->
+		<div id="pkg-overview" class="toggleVisible">
+			<div class="collapsed">
+				<h2 class="toggleButton" title="Click to show Overview section">Overview ▹</h2>
+			</div>
+			<div class="expanded">
+				<h2 class="toggleButton" title="Click to hide Overview section">Overview ▾</h2>
+				<p>
+WoodLog is a logger downed from wood.
+</p>
+<p>
+WoodLog is ridiculously simple structured and leveled logger  based on stdlib `log` package.
+WoodLog is not lightning fast neither it doesn&#39;t produce extra complicated logs structure.
+It does minimum what logger must do - L.O.G.S (!) with structure and levels.
+</p>
+
+			</div>
+		</div>
+		
+
+		<div id="pkg-index" class="toggleVisible">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Index section">Index ▹</h2>
+		</div>
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Index section">Index ▾</h2>
+
+		<!-- Table of contents for API; must be named manual-nav to turn off auto nav. -->
+			<div id="manual-nav">
+			<dl>
+			
+			
+			
+			
+				
+				<dd><a href="#BaseLog">type BaseLog</a></dd>
+				
+				
+			
+				
+				<dd><a href="#Log">type Log</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#New">func New(level string) (logger *Log, err error)</a></dd>
+				
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Log.DEBUG">func (l *Log) DEBUG(slots map[string]interface{}) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Log.ERROR">func (l *Log) ERROR(slots map[string]interface{}) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Log.FATAL">func (l *Log) FATAL(slots map[string]interface{}) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Log.INFO">func (l *Log) INFO(slots map[string]interface{}) (err error)</a></dd>
+				
+					
+					<dd>&nbsp; &nbsp; <a href="#Log.TRACE">func (l *Log) TRACE(slots map[string]interface{}) (err error)</a></dd>
+				
+			
+				
+				<dd><a href="#Logger">type Logger</a></dd>
+				
+				
+			
+			
+			</dl>
+			</div><!-- #manual-nav -->
+
+		
+
+		
+			<h4>Package files</h4>
+			<p>
+			<span style="font-size:90%">
+			
+				<a href="/src/target/logger.go">logger.go</a>
+			
+			</span>
+			</p>
+		
+		</div><!-- .expanded -->
+		</div><!-- #pkg-index -->
+
+		<div id="pkg-callgraph" class="toggle" style="display: none">
+		<div class="collapsed">
+			<h2 class="toggleButton" title="Click to show Internal Call Graph section">Internal call graph ▹</h2>
+		</div> <!-- .expanded -->
+		<div class="expanded">
+			<h2 class="toggleButton" title="Click to hide Internal Call Graph section">Internal call graph ▾</h2>
+			<p>
+			  In the call graph viewer below, each node
+			  is a function belonging to this package
+			  and its children are the functions it
+			  calls&mdash;perhaps dynamically.
+			</p>
+			<p>
+			  The root nodes are the entry points of the
+			  package: functions that may be called from
+			  outside the package.
+			  There may be non-exported or anonymous
+			  functions among them if they are called
+			  dynamically from another package.
+			</p>
+			<p>
+			  Click a node to visit that function's source code.
+			  From there you can visit its callers by
+			  clicking its declaring <code>func</code>
+			  token.
+			</p>
+			<p>
+			  Functions may be omitted if they were
+			  determined to be unreachable in the
+			  particular programs or tests that were
+			  analyzed.
+			</p>
+			<!-- Zero means show all package entry points. -->
+			<ul style="margin-left: 0.5in" id="callgraph-0" class="treeview"></ul>
+		</div>
+		</div> <!-- #pkg-callgraph -->
+
+		
+		
+		
+		
+			
+			
+			<h2 id="BaseLog">type <a href="/src/target/logger.go?s=695:716#L19">BaseLog</a>
+				<a class="permalink" href="#BaseLog">&#xb6;</a>
+			</h2>
+			<p>
+Base logger. Implements log structure format
+</p>
+
+			<pre>type BaseLog struct{}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+			
+			
+			<h2 id="Log">type <a href="/src/target/logger.go?s=1513:1694#L50">Log</a>
+				<a class="permalink" href="#Log">&#xb6;</a>
+			</h2>
+			<p>
+Logger implementation
+</p>
+
+			<pre>type Log struct {
+    <a href="#BaseLog">BaseLog</a>
+    <span class="comment">// contains filtered or unexported fields</span>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+				
+				<h3 id="New">func <a href="/src/target/logger.go?s=4057:4104#L132">New</a>
+					<a class="permalink" href="#New">&#xb6;</a>
+				</h3>
+				<pre>func New(level <a href="/pkg/builtin/#string">string</a>) (logger *<a href="#Log">Log</a>, err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+New logger
+</p>
+
+				
+				
+			
+
+			
+				
+				<h3 id="Log.DEBUG">func (*Log) <a href="/src/target/logger.go?s=1905:1966#L64">DEBUG</a>
+					<a class="permalink" href="#Log.DEBUG">&#xb6;</a>
+				</h3>
+				<pre>func (l *<a href="#Log">Log</a>) DEBUG(slots map[<a href="/pkg/builtin/#string">string</a>]interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+DEBUG level.
+Uses stdout as output file. Contains prefix &#34;DEBUG&#34;, the date in the local time zone: 2009/01/23,
+microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Log.ERROR">func (*Log) <a href="/src/target/logger.go?s=2818:2879#L92">ERROR</a>
+					<a class="permalink" href="#Log.ERROR">&#xb6;</a>
+				</h3>
+				<pre>func (l *<a href="#Log">Log</a>) ERROR(slots map[<a href="/pkg/builtin/#string">string</a>]interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+ERROR level.
+Uses stderr as output file. Contains prefix &#34;ERROR&#34;, the date in the local time zone: 2009/01/23,
+microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Log.FATAL">func (*Log) <a href="/src/target/logger.go?s=3773:3834#L120">FATAL</a>
+					<a class="permalink" href="#Log.FATAL">&#xb6;</a>
+				</h3>
+				<pre>func (l *<a href="#Log">Log</a>) FATAL(slots map[<a href="/pkg/builtin/#string">string</a>]interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+FATAL level.
+Uses stderr as output file and exits with code 1 after logging. Contains prefix &#34;FATAL&#34;, the date in the local time zone: 2009/01/23,
+microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Log.INFO">func (*Log) <a href="/src/target/logger.go?s=2340:2400#L78">INFO</a>
+					<a class="permalink" href="#Log.INFO">&#xb6;</a>
+				</h3>
+				<pre>func (l *<a href="#Log">Log</a>) INFO(slots map[<a href="/pkg/builtin/#string">string</a>]interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+INFO level.
+Uses stdout as output file. Contains prefix &#34;INFO&#34;, microsecond resolution: 01:23:23.123123,
+final file name element and line number: d.go:23
+</p>
+
+				
+				
+				
+			
+				
+				<h3 id="Log.TRACE">func (*Log) <a href="/src/target/logger.go?s=3256:3317#L106">TRACE</a>
+					<a class="permalink" href="#Log.TRACE">&#xb6;</a>
+				</h3>
+				<pre>func (l *<a href="#Log">Log</a>) TRACE(slots map[<a href="/pkg/builtin/#string">string</a>]interface{}) (err <a href="/pkg/builtin/#error">error</a>)</pre>
+				<p>
+TRACE level.
+Uses stdout as output file. Contains prefix &#34;TRACE&#34;, microsecond resolution: 01:23:23.123123,
+final file name element and line number: d.go:23
+</p>
+
+				
+				
+				
+			
+		
+			
+			
+			<h2 id="Logger">type <a href="/src/target/logger.go?s=436:645#L10">Logger</a>
+				<a class="permalink" href="#Logger">&#xb6;</a>
+			</h2>
+			<p>
+Public interface to extend existing functional
+</p>
+
+			<pre>type Logger interface {
+    DEBUG(map[<a href="/pkg/builtin/#string">string</a>]interface{}) <a href="/pkg/builtin/#error">error</a>
+    INFO(map[<a href="/pkg/builtin/#string">string</a>]interface{}) <a href="/pkg/builtin/#error">error</a>
+    ERROR(map[<a href="/pkg/builtin/#string">string</a>]interface{}) <a href="/pkg/builtin/#error">error</a>
+    FATAL(map[<a href="/pkg/builtin/#string">string</a>]interface{}) <a href="/pkg/builtin/#error">error</a>
+    TRACE(map[<a href="/pkg/builtin/#string">string</a>]interface{}) <a href="/pkg/builtin/#error">error</a>
+}</pre>
+
+			
+
+			
+
+			
+			
+			
+
+			
+
+			
+		
+	
+
+	
+
+
+
+
+
