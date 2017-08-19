@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/I159/woodlog.svg?branch=master)](https://travis-ci.org/I159/woodlog)
+[![Code Climate](https://codeclimate.com/github/I159/woodlog/badges/gpa.svg)](https://codeclimate.com/github/I159/woodlog)
+[![Test Coverage](https://codeclimate.com/github/I159/woodlog/badges/coverage.svg)](https://codeclimate.com/github/I159/woodlog/coverage)
+
 # Wood Log
 
 ## API reference
