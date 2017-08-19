@@ -54,7 +54,11 @@ func Test_baseLog_formatSlots(t *testing.T) {
 		wantBuf *bytes.Buffer
 		wantErr bool
 	}{
-	// TODO: Add test cases.
+		{
+			name: "Wrong argument type",
+			wantErr: true,
+			args: args{map[string]interface{}{"k": int64(1)}},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
