@@ -1,8 +1,12 @@
 package woodlog
 
 import (
+	"log"
+	"os"
+	"errors"
 	"bytes"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -57,8 +61,8 @@ func Test_baseLog_formatSlots(t *testing.T) {
 		{
 			name: "Wrong argument type",
 			wantErr: true,
-			wantBuf: new(bytes.Buffer),
 			args: args{map[string]interface{}{"k": int64(1)}},
+			wantBuf: new(bytes.Buffer),
 		},
 	}
 	for _, tt := range tests {
@@ -76,7 +80,20 @@ func Test_baseLog_formatSlots(t *testing.T) {
 	}
 }
 
+type mockFailFormatter struct{}
+
+func (m *mockFailFormatter) formatSlots(map[string]interface{}) (b *bytes.Buffer, err error) {
+	b = bytes.NewBuffer([]byte{})
+	err = errors.New("")
+	return
+}
+
 func TestLog_DEBUG(t *testing.T) {
+	var kvBuf bytes.Buffer
+	var b bytes.Buffer
+
+	kvBuf.WriteString("")
+
 	type fields struct {
 		formatter formatter
 		debug     Logger
@@ -89,12 +106,30 @@ func TestLog_DEBUG(t *testing.T) {
 		slots map[string]interface{}
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
+		name        string
+		fields      fields
+		args        args
+		wantErr     bool
+		wantPattern *regexp.Regexp
 	}{
-	// TODO: Add test cases.
+		{
+			name: "Key value",
+			fields: fields{
+				formatter: new(baseLog),
+				debug:     log.New(&b, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+			},
+			args:        args{map[string]interface{}{"k": "v"}},
+			wantPattern: regexp.MustCompile("DEBUG: [0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]*"),
+		},
+		{
+			name: "Format fail",
+			fields: fields{
+				formatter: new(mockFailFormatter),
+				debug:     log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+			},
+			args:    args{map[string]interface{}{"k": "v"}},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -108,6 +143,9 @@ func TestLog_DEBUG(t *testing.T) {
 			}
 			if err := l.DEBUG(tt.args.slots); (err != nil) != tt.wantErr {
 				t.Errorf("Log.DEBUG() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
+				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
 		})
 	}
