@@ -2,6 +2,9 @@ package woodlog
 
 import (
 	"bytes"
+	"errors"
+	"log"
+	"os"
 	"reflect"
 	"strings"
 	"testing"
@@ -44,6 +47,10 @@ func Test_baseLog_writeKV(t *testing.T) {
 }
 
 func Test_baseLog_formatSlots(t *testing.T) {
+	var bufInt, bufBool, bufStr bytes.Buffer
+	bufBool.WriteString("k: false")
+	bufInt.WriteString("k: 1")
+	bufStr.WriteString("k: a")
 	type args struct {
 		slots map[string]interface{}
 	}
@@ -51,13 +58,28 @@ func Test_baseLog_formatSlots(t *testing.T) {
 		name    string
 		l       *baseLog
 		args    args
-		wantBuf *bytes.Buffer
+		wantBuf bytes.Buffer
 		wantErr bool
 	}{
 		{
-			name: "Wrong argument type",
+			name:    "Wrong argument type",
 			wantErr: true,
-			args: args{map[string]interface{}{"k": int64(1)}},
+			args:    args{map[string]interface{}{"k": int64(1)}},
+		},
+		{
+			name:    "int value",
+			wantBuf: bufInt,
+			args:    args{map[string]interface{}{"k": 1}},
+		},
+		{
+			name:    "bool value",
+			wantBuf: bufBool,
+			args:    args{map[string]interface{}{"k": false}},
+		},
+		{
+			name:    "string value",
+			wantBuf: bufStr,
+			args:    args{map[string]interface{}{"k": "a"}},
 		},
 	}
 	for _, tt := range tests {
@@ -73,6 +95,13 @@ func Test_baseLog_formatSlots(t *testing.T) {
 			}
 		})
 	}
+}
+
+type mockFailFormatter struct{}
+
+func (m *mockFailFormatter) formatSlots(map[string]interface{}) (b bytes.Buffer, err error) {
+	err = errors.New("")
+	return 
 }
 
 func TestLog_DEBUG(t *testing.T) {
@@ -93,7 +122,23 @@ func TestLog_DEBUG(t *testing.T) {
 		args    args
 		wantErr bool
 	}{
-	// TODO: Add test cases.
+		{
+			name: "Correct output",
+			fields: fields{
+				formatter: new(baseLog),
+				debug:     log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+			},
+			args: args{map[string]interface{}{"k": "v"}},
+		},
+		{
+			name: "Format fail",
+			fields: fields{
+				formatter: new(mockFailFormatter),
+				debug:     log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+			},
+			args:    args{map[string]interface{}{"k": "v"}},
+			wantErr: true,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
