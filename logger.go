@@ -41,15 +41,15 @@ func (l *baseLog) writeKV(b *bytes.Buffer, k, v string) {
 // formatSlots recursively formats log structure from slots.
 // Returns buffer containing formatted log payload.
 func (l *baseLog) formatSlots(slots map[string]interface{}) (buf *bytes.Buffer, err error) {
-	var b bytes.Buffer
+	buf = new(bytes.Buffer)
 	for k, v := range slots {
 		switch t := v.(type) {
 		case int:
-			l.writeKV(&b, k, strconv.Itoa(t))
+			l.writeKV(buf, k, strconv.Itoa(t))
 		case bool:
-			l.writeKV(&b, k, strconv.FormatBool(t))
+			l.writeKV(buf, k, strconv.FormatBool(t))
 		case string:
-			l.writeKV(&b, k, t)
+			l.writeKV(buf, k, t)
 		default:
 			_, f, l, _ := runtime.Caller(0)
 			err = fmt.Errorf("%s %d: Wrong type of logging argument.", f, l)

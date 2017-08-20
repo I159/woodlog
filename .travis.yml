@@ -1,0 +1,3 @@
+language: go
+env:
+  CODECLIMATE_REPO_TOKEN: 5bedf25c5d3395678023cf06e9a2b67ad29f25b7fbcde0c45cd0eb3138306d78

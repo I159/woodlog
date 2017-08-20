@@ -11,6 +11,8 @@ stdlib `log` package. WoodLog is not lightning fast neither it doesn't
 produce extra complicated logs structure. It does minimum what logger
 must do - L.O.G.S (!) with structure and levels.
 
+## API reference
+
     type Log struct {
          // contains filtered or unexported fields
     }
