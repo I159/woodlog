@@ -76,7 +76,7 @@ func (l *Log) DEBUG(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %s: Log DEBUG error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log DEBUG error.", err.Error(), f, l)
 		return
 	}
 	l.debug.Println(buf.String())
@@ -90,7 +90,7 @@ func (l *Log) INFO(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %s: Log INFO error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log INFO error.", err.Error(), f, l)
 		return
 	}
 	l.info.Println(buf.String())
@@ -104,7 +104,7 @@ func (l *Log) ERROR(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %s: Log ERROR error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log ERROR error.", err.Error(), f, l)
 		return
 	}
 	l.error_.Println(buf.String())
@@ -118,7 +118,7 @@ func (l *Log) TRACE(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %s: Log TRACE error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log TRACE error.", err.Error(), f, l)
 		return
 	}
 	l.trace.Println(buf.String())
@@ -132,7 +132,7 @@ func (l *Log) FATAL(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %s: Log FATAL error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log FATAL error.", err.Error(), f, l)
 		return
 	}
 	l.fatal.Fatal(buf.String())
