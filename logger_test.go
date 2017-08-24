@@ -101,10 +101,15 @@ type mockFailFormatter struct{}
 
 func (m *mockFailFormatter) formatSlots(map[string]interface{}) (b bytes.Buffer, err error) {
 	err = errors.New("")
-	return 
+	return
 }
 
 func TestLog_DEBUG(t *testing.T) {
+	var kvBuf bytes.Buffer
+	var b bytes.Buffer
+
+	kvBuf.WriteString("")
+
 	type fields struct {
 		formatter formatter
 		debug     Logger
@@ -121,14 +126,16 @@ func TestLog_DEBUG(t *testing.T) {
 		fields  fields
 		args    args
 		wantErr bool
+		wantBuf *bytes.Buffer
 	}{
 		{
-			name: "Correct output",
+			name: "Key value",
 			fields: fields{
 				formatter: new(baseLog),
-				debug:     log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+				debug:     log.New(&b, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
 			},
 			args: args{map[string]interface{}{"k": "v"}},
+			wantBuf: &kvBuf,
 		},
 		{
 			name: "Format fail",
@@ -152,6 +159,9 @@ func TestLog_DEBUG(t *testing.T) {
 			}
 			if err := l.DEBUG(tt.args.slots); (err != nil) != tt.wantErr {
 				t.Errorf("Log.DEBUG() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			if tt.wantBuf != nil &&  strings.Compare(b.String(), tt.wantBuf.String()) != 0 {
+				t.Errorf("Logger output: %v; want: %v", b.String(), tt.wantBuf.String())
 			}
 		})
 	}
