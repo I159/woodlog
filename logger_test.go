@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"reflect"
+	"regexp"
 	"strings"
 	"testing"
 )
@@ -122,11 +123,11 @@ func TestLog_DEBUG(t *testing.T) {
 		slots map[string]interface{}
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
-		wantBuf *bytes.Buffer
+		name        string
+		fields      fields
+		args        args
+		wantErr     bool
+		wantPattern *regexp.Regexp
 	}{
 		{
 			name: "Key value",
@@ -134,8 +135,8 @@ func TestLog_DEBUG(t *testing.T) {
 				formatter: new(baseLog),
 				debug:     log.New(&b, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
 			},
-			args: args{map[string]interface{}{"k": "v"}},
-			wantBuf: &kvBuf,
+			args:        args{map[string]interface{}{"k": "v"}},
+			wantPattern: regexp.MustCompile("DEBUG: [0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]*"),
 		},
 		{
 			name: "Format fail",
@@ -160,8 +161,8 @@ func TestLog_DEBUG(t *testing.T) {
 			if err := l.DEBUG(tt.args.slots); (err != nil) != tt.wantErr {
 				t.Errorf("Log.DEBUG() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			if tt.wantBuf != nil &&  strings.Compare(b.String(), tt.wantBuf.String()) != 0 {
-				t.Errorf("Logger output: %v; want: %v", b.String(), tt.wantBuf.String())
+			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
+				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
 		})
 	}
