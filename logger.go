@@ -9,6 +9,7 @@ package woodlog
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -41,6 +42,9 @@ func (l *baseLog) writeKV(b *bytes.Buffer, k, v string) {
 // formatSlots recursively formats log structure from slots.
 // Returns buffer containing formatted log payload.
 func (l *baseLog) formatSlots(slots map[string]interface{}) (buf bytes.Buffer, err error) {
+	if len(slots) == 0 {
+		err = errors.New("Empty logging is not allowed.")
+	}
 	for k, v := range slots {
 		switch t := v.(type) {
 		case int:
