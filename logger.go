@@ -157,11 +157,11 @@ func newERROR(wr io.Writer) Logger {
 }
 
 func newTRACE(wr io.Writer) Logger {
-	return log.New(wr, "TRACE ", log.Lmicroseconds|log.Lshortfile)
+	return log.New(wr, "TRACE: ", log.Lmicroseconds|log.Lshortfile)
 }
 
 func newFATAL(wr io.Writer) Logger {
-	return log.New(wr, "FATAL", log.Ldate|log.Lmicroseconds|log.Llongfile)
+	return log.New(wr, "FATAL: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
 }
 
 // New logger

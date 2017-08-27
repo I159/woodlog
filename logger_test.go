@@ -3,6 +3,7 @@ package woodlog
 import (
 	"bytes"
 	"errors"
+	"log"
 	"reflect"
 	"regexp"
 	"strings"
@@ -167,7 +168,6 @@ func TestLog_DEBUG(t *testing.T) {
 			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
 				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
-			println(b.String())
 		})
 		b.Reset()
 	}
@@ -201,7 +201,7 @@ func TestLog_INFO(t *testing.T) {
 				info:      newINFO(&b),
 			},
 			args:        args{map[string]interface{}{"k": "v"}},
-			wantPattern: regexp.MustCompile("INFO: [0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]+"),
+			wantPattern: regexp.MustCompile("INFO: [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]+"),
 		},
 		{
 			name: "Empty payload",
@@ -237,7 +237,6 @@ func TestLog_INFO(t *testing.T) {
 			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
 				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
-			println(b.String())
 		})
 		b.Reset()
 	}
@@ -306,7 +305,6 @@ func TestLog_ERROR(t *testing.T) {
 			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
 				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
-			println(b.String())
 		})
 		b.Reset()
 	}
@@ -339,7 +337,7 @@ func TestLog_TRACE(t *testing.T) {
 				trace:     newTRACE(&b),
 			},
 			args:        args{map[string]interface{}{"k": "v"}},
-			wantPattern: regexp.MustCompile("TRACE: [0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]+"),
+			wantPattern: regexp.MustCompile("TRACE: [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]+"),
 		},
 		{
 			name: "Empty payload",
@@ -375,10 +373,20 @@ func TestLog_TRACE(t *testing.T) {
 			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
 				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
-			println(b.String())
 		})
 		b.Reset()
 	}
+}
+
+type mockLogger struct {
+	logger *log.Logger
+}
+
+func (m *mockLogger) Fatal(v ...interface{}) {
+	m.logger.Println(v...)
+}
+func (m *mockLogger) Println(v ...interface{}) {
+	m.logger.Println(v...)
 }
 
 func TestLog_FATAL(t *testing.T) {
@@ -395,17 +403,17 @@ func TestLog_FATAL(t *testing.T) {
 		slots map[string]interface{}
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		args    args
-		wantErr bool
+		name        string
+		fields      fields
+		args        args
+		wantErr     bool
 		wantPattern *regexp.Regexp
 	}{
 		{
 			name: "Key value",
 			fields: fields{
 				formatter: new(baseLog),
-				trace:     newFATAL(&b),
+				fatal:     &mockLogger{log.New(&b, "FATAL: ", log.Ldate|log.Lmicroseconds|log.Llongfile)},
 			},
 			args:        args{map[string]interface{}{"k": "v"}},
 			wantPattern: regexp.MustCompile("FATAL: [0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]+"),
@@ -414,7 +422,7 @@ func TestLog_FATAL(t *testing.T) {
 			name: "Empty payload",
 			fields: fields{
 				formatter: new(baseLog),
-				trace:     newFATAL(&b),
+				fatal:     &mockLogger{log.New(&b, "FATAL: ", log.Ldate|log.Lmicroseconds|log.Llongfile)},
 			},
 			wantErr: true,
 		},
@@ -422,7 +430,7 @@ func TestLog_FATAL(t *testing.T) {
 			name: "Format fail",
 			fields: fields{
 				formatter: new(mockFailFormatter),
-				trace:     newFATAL(&b),
+				fatal:     &mockLogger{log.New(&b, "FATAL: ", log.Ldate|log.Lmicroseconds|log.Llongfile)},
 			},
 			args:    args{map[string]interface{}{"k": "v"}},
 			wantErr: true,
@@ -438,13 +446,12 @@ func TestLog_FATAL(t *testing.T) {
 				trace:     tt.fields.trace,
 				fatal:     tt.fields.fatal,
 			}
-			if err := l.TRACE(tt.args.slots); (err != nil) != tt.wantErr {
+			if err := l.FATAL(tt.args.slots); (err != nil) != tt.wantErr {
 				t.Errorf("Log.FATAL() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if tt.wantPattern != nil && tt.wantPattern.MatchString(b.String()) != true {
 				t.Errorf("Logger output: %v; want pattern: %v", b.String(), tt.wantPattern.String())
 			}
-			println(b.String())
 		})
 		b.Reset()
 	}
