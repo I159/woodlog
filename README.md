@@ -62,8 +62,8 @@ Public logger interface.
 
 	logger, err := woodlog.New()
 
-	logger.INFO("User information.")
-	logger.DEBUG("Critical development inforamation.")
-	logger.ERROR("Critical admin information")
-	logger.TRACE("Regular development and admin information")
-	logger.FATAL("Fatal information and exit 1")
+	logger.INFO(map[string]interface{}{"User": "Name", "Message": "Success"})
+	logger.DEBUG(map[string]interface{}{"Server IP": "127.0.0.1", "Issue": "Invalid args"})
+	logger.ERROR(map[string]interface{}{"Deploy": "Prod", "Host IP":"192.168.0.1"})
+	logger.TRACE(map[string]interface{}{"Caller IP": "192.168.0.1", "HTTP method": "POST"})
+	logger.FATAL(map[string]interface{}{"Error msg": "Production db is empty"})
