@@ -67,3 +67,10 @@ Public logger interface.
 	logger.ERROR(map[string]interface{}{"Deploy": "Prod", "Host IP":"192.168.0.1"})
 	logger.TRACE(map[string]interface{}{"Caller IP": "192.168.0.1", "HTTP method": "POST"})
 	logger.FATAL(map[string]interface{}{"Error msg": "Production db is empty"})
+
+## Contribution
+
+Client side hooks
+-----------------
+Branching strategy
+------------------
