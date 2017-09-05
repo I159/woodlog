@@ -1,0 +1,17 @@
+#!/usr/bin/python
+import re
+import sys
+
+
+def main():
+    commit = re.compile(r'^[a-zA-Z0-9 ,:\.\-_)]{15,72}\n\n(?!#)([a-zA-Z0-9\s,\.\-_]{1,72}\n|\s{4}.*\n)+'
+                        '(close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved): #\d+', re.I)
+    with open(sys.argv[1]) as f:
+        msg_content = f.read()
+
+        if not commit.match(msg_content):
+            print("Please write an appropriate commit message")
+            exit(1)
+
+if __name__ == '__main__':
+    main()
