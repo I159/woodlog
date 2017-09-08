@@ -1,6 +1,9 @@
 /*
 WoodLog is a logger downed from wood.
 
+There is plenty of loggers written on Go. All of it extra complicated
+lightning fast mega-flexible huge like a space ships libraries.
+
 WoodLog is ridiculously simple structured and leveled logger  based on stdlib `log` package.
 WoodLog is not lightning fast neither it doesn't produce extra complicated logs structure.
 It does minimum what logger must do - L.O.G.S (!) with structure and levels.
