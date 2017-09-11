@@ -1,12 +1,65 @@
 /*
-WoodLog is a logger downed from wood.
-
-There is plenty of loggers written on Go. All of it extra complicated
-lightning fast mega-flexible huge like a space ships libraries.
+Package WoodLog is a logger downed from wood.
 
 WoodLog is ridiculously simple structured and leveled logger  based on stdlib `log` package.
 WoodLog is not lightning fast neither it doesn't produce extra complicated logs structure.
 It does minimum what logger must do - L.O.G.S (!) with structure and levels.
+## Motivation
+
+There is plenty of loggers written on Go. All of it extra complicated
+lightning fast mega-flexible huge like a space ships libraries. It's all too mach
+if you are building a small tool and want to know what happens
+inside of it. Skipping low level optimization, contexts and flexibility WoodLog
+implements simple as a piece of wood structured and 
+leveled logger.
+
+## Installation
+
+Probably you have Go installed and configured. So just do:
+
+    `go get github.com/I159/woodlog`
+
+## Get started
+
+Log everything you need to expose out of an application using simple system of levels
+and map to pass a key-value structure of logged arguments to the logger instance.
+Let's say you have an http server and you want to bring some transparency to it:
+
+	package main
+
+	import (
+		"fmt"
+		"html"
+		"net/http"
+
+		"github.com/I159/woodlog"
+	)
+
+	var logger *woodlog.Logger = woodlog.New()
+
+	func handler(w http.ResponseWriter, r *http.Request) {
+		logger.TRACE(map[string]interface{}{"Request state": "received"})
+		logger.INFO(map[string]interface{}{"Requested url": "/bar"})
+
+		if num, err := importantFunc(); err == nil {
+			logger.DEBUG(map[string]interface{}{"Incoming word number": num})
+			fmt.Fprintf(w, "Hello, %q #%d", html.EscapeString(r.URL.Path), num)
+		} else {
+			logger.ERROR(map[string]interface{}{"Error": err, "Occured in": "importantFunc"})
+		}
+
+		logger.TRACE(map[string]interface{}{"Request state": "jesponded"})
+	}
+
+	func main() {
+		http.HandleFunc("/bar", handler)
+		logger.Fatal(map[string]interface{}{"Server stopped due to": http.ListenAndServe(":8080", nil)})
+	}
+
+## Advanced usage and custom 
+
+If existing levels granularity is not enough you can implement your own `Logger` interface implementation.
+See `Logger` interface documentation for details.
 */
 package woodlog
 
