@@ -10,7 +10,7 @@ There is plenty of loggers written on Go. All of it extra complicated
 lightning fast mega-flexible huge like a space ships libraries. It's all too mach
 if you are building a small tool and want to know what happens
 inside of it. Skipping low level optimization, contexts and flexibility WoodLog
-implements simple as a piece of wood structured and 
+implements simple as a piece of wood structured and
 leveled logger.
 
 ## Installation
@@ -56,10 +56,34 @@ Let's say you have an http server and you want to bring some transparency to it:
 		logger.Fatal(map[string]interface{}{"Server stopped due to": http.ListenAndServe(":8080", nil)})
 	}
 
-## Advanced usage and custom 
+## Advanced usage and custom
 
-If existing levels granularity is not enough you can implement your own `Logger` interface implementation.
+If existing granularity of levels is not enough you can implement your own logger based on `formatter` interface.
 See `Logger` interface documentation for details.
+
+	type CustomLog struct {
+		*Log
+		panic *Logger
+	}
+
+	func (l *CustomLog) PANIC(slots map[string]interface{}) (err error) {
+		buf, err := l.FormatSlots(slots)
+		if err != nil {
+			_, f, l, _ := runtime.Caller(0)
+			err = fmt.Errorf("%s\n%s %d: Log DEBUG error.", err.Error(), f, l)
+			return
+		}
+		defer panic(buf.String())
+		l.panic.Println(buf.String())
+		return
+	}
+
+	func newCustomLogger() *CustomLog {
+		return &CustomLog{
+			woodlog.New(),
+			log.New(wr, "PANIC: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+		}
+	}
 */
 package woodlog
 
