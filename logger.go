@@ -19,6 +19,8 @@ Probably you have Go installed and configured. So just do:
 
     `go get github.com/I159/woodlog`
 
+Then you can import it and use it as described below.
+
 ## Get started
 
 Log everything you need to expose out of an application using simple system of levels
