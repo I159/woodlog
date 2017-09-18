@@ -114,19 +114,19 @@ type formatter interface {
 // Base logger. Implements log structure format
 type baseLog struct{}
 
-// writeKV Writes structure key and casted value to a buffer.
-// Returns formated dtructure field.
+// writeKV
+// Writes a passed key-value pairs to a *bytes.Buffer as a formatted string.
 func (l *baseLog) writeKV(b *bytes.Buffer, k, v string) {
 	b.WriteString(k)
 	b.WriteString(": ")
 	b.WriteString(v)
 }
 
-// formatSlots recursively formats log structure from slots.
+// formatSlots recursively formats log structure from a passed slots.
 // Returns buffer containing formatted log payload.
 func (l *baseLog) formatSlots(slots map[string]interface{}) (buf bytes.Buffer, err error) {
 	if len(slots) == 0 {
-		err = errors.New("Empty logging is not allowed.")
+		err = errors.New("empty logging is not allowed")
 	}
 	for k, v := range slots {
 		switch t := v.(type) {
@@ -138,13 +138,15 @@ func (l *baseLog) formatSlots(slots map[string]interface{}) (buf bytes.Buffer, e
 			l.writeKV(&buf, k, t)
 		default:
 			_, f, l, _ := runtime.Caller(0)
-			err = fmt.Errorf("%s %d: Wrong type of logging argument.", f, l)
+			err = fmt.Errorf("%s %d: Wrong type of logging argument", f, l)
 		}
 	}
 	return
 }
 
-// Logger constructor.
+// Log.
+// Composition of loggers of different levels. Each logger satisfies `Logger` interface
+// and could be replaced with a custom object statisfying the interface.
 type Log struct {
 	formatter
 
@@ -163,7 +165,7 @@ func (l *Log) DEBUG(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log DEBUG error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log DEBUG error", err.Error(), f, l)
 		return
 	}
 	l.debug.Println(buf.String())
@@ -177,7 +179,7 @@ func (l *Log) INFO(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log INFO error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log INFO error", err.Error(), f, l)
 		return
 	}
 	l.info.Println(buf.String())
@@ -191,7 +193,7 @@ func (l *Log) ERROR(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log ERROR error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log ERROR error", err.Error(), f, l)
 		return
 	}
 	l.error_.Println(buf.String())
@@ -205,7 +207,7 @@ func (l *Log) TRACE(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log TRACE error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log TRACE error", err.Error(), f, l)
 		return
 	}
 	l.trace.Println(buf.String())
@@ -219,7 +221,7 @@ func (l *Log) FATAL(slots map[string]interface{}) (err error) {
 	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log FATAL error.", err.Error(), f, l)
+		err = fmt.Errorf("%s\n%s %d: Log FATAL error", err.Error(), f, l)
 		return
 	}
 	l.fatal.Fatal(buf.String())
