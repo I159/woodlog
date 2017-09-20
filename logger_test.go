@@ -41,7 +41,7 @@ func Test_baseLog_writeKV(t *testing.T) {
 			defer b.Reset()
 
 			if strings.Compare(b.String(), "k: v") != 0 {
-				t.Error("Incorrect formatting: %s", b.String())
+				t.Errorf("Incorrect formatting: %s", b.String())
 			}
 		})
 	}
@@ -98,7 +98,7 @@ func TestLog_DEBUG(t *testing.T) {
 		formatter formatter
 		debug     LoggerLevel
 		info      LoggerLevel
-		error_    LoggerLevel
+		eRRor     LoggerLevel
 		trace     LoggerLevel
 		fatal     LoggerLevel
 	}
@@ -137,7 +137,7 @@ func TestLog_DEBUG(t *testing.T) {
 				formatter: tt.fields.formatter,
 				debug:     tt.fields.debug,
 				info:      tt.fields.info,
-				error_:    tt.fields.error_,
+				eRRor:     tt.fields.eRRor,
 				trace:     tt.fields.trace,
 				fatal:     tt.fields.fatal,
 			}
@@ -158,7 +158,7 @@ func TestLog_INFO(t *testing.T) {
 		formatter formatter
 		debug     LoggerLevel
 		info      LoggerLevel
-		error_    LoggerLevel
+		eRRor     LoggerLevel
 		trace     LoggerLevel
 		fatal     LoggerLevel
 	}
@@ -205,7 +205,7 @@ func TestLog_INFO(t *testing.T) {
 				formatter: tt.fields.formatter,
 				debug:     tt.fields.debug,
 				info:      tt.fields.info,
-				error_:    tt.fields.error_,
+				eRRor:     tt.fields.eRRor,
 				trace:     tt.fields.trace,
 				fatal:     tt.fields.fatal,
 			}
@@ -226,7 +226,7 @@ func TestLog_ERROR(t *testing.T) {
 		formatter formatter
 		debug     LoggerLevel
 		info      LoggerLevel
-		error_    LoggerLevel
+		eRRor     LoggerLevel
 		trace     LoggerLevel
 		fatal     LoggerLevel
 	}
@@ -244,7 +244,7 @@ func TestLog_ERROR(t *testing.T) {
 			name: "Key value",
 			fields: fields{
 				formatter: new(baseLog),
-				error_:    newERROR(&b),
+				eRRor:     newERROR(&b),
 			},
 			args:        args{map[string]interface{}{"k": "v"}},
 			wantPattern: regexp.MustCompile("ERROR: [0-9]{4}/[0-9]{2}/[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6} [a-zA-Z0-9/_\\.]*:[0-9]+: [a-zA-Z0-9: ]+"),
@@ -253,7 +253,7 @@ func TestLog_ERROR(t *testing.T) {
 			name: "Empty payload",
 			fields: fields{
 				formatter: new(baseLog),
-				error_:    newERROR(&b),
+				eRRor:     newERROR(&b),
 			},
 			wantErr: true,
 		},
@@ -261,7 +261,7 @@ func TestLog_ERROR(t *testing.T) {
 			name: "Format fail",
 			fields: fields{
 				formatter: new(mockFailFormatter),
-				error_:    newERROR(&b),
+				eRRor:     newERROR(&b),
 			},
 			args:    args{map[string]interface{}{"k": "v"}},
 			wantErr: true,
@@ -273,7 +273,7 @@ func TestLog_ERROR(t *testing.T) {
 				formatter: tt.fields.formatter,
 				debug:     tt.fields.debug,
 				info:      tt.fields.info,
-				error_:    tt.fields.error_,
+				eRRor:     tt.fields.eRRor,
 				trace:     tt.fields.trace,
 				fatal:     tt.fields.fatal,
 			}
@@ -294,7 +294,7 @@ func TestLog_TRACE(t *testing.T) {
 		formatter formatter
 		debug     LoggerLevel
 		info      LoggerLevel
-		error_    LoggerLevel
+		eRRor     LoggerLevel
 		trace     LoggerLevel
 		fatal     LoggerLevel
 	}
@@ -341,7 +341,7 @@ func TestLog_TRACE(t *testing.T) {
 				formatter: tt.fields.formatter,
 				debug:     tt.fields.debug,
 				info:      tt.fields.info,
-				error_:    tt.fields.error_,
+				eRRor:     tt.fields.eRRor,
 				trace:     tt.fields.trace,
 				fatal:     tt.fields.fatal,
 			}
@@ -373,7 +373,7 @@ func TestLog_FATAL(t *testing.T) {
 		formatter formatter
 		debug     LoggerLevel
 		info      LoggerLevel
-		error_    LoggerLevel
+		eRRor     LoggerLevel
 		trace     LoggerLevel
 		fatal     LoggerLevel
 	}
@@ -420,7 +420,7 @@ func TestLog_FATAL(t *testing.T) {
 				formatter: tt.fields.formatter,
 				debug:     tt.fields.debug,
 				info:      tt.fields.info,
-				error_:    tt.fields.error_,
+				eRRor:     tt.fields.eRRor,
 				trace:     tt.fields.trace,
 				fatal:     tt.fields.fatal,
 			}

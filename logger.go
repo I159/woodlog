@@ -152,11 +152,11 @@ func (l *baseLog) FormatSlots(slots map[string]interface{}) (buf *bytes.Buffer, 
 type Log struct {
 	formatter
 
-	debug  LoggerLevel
-	info   LoggerLevel
-	error_ LoggerLevel
-	trace  LoggerLevel
-	fatal  LoggerLevel
+	debug LoggerLevel
+	info  LoggerLevel
+	eRRor LoggerLevel
+	trace LoggerLevel
+	fatal LoggerLevel
 }
 
 // DEBUG level.
@@ -197,7 +197,7 @@ func (l *Log) ERROR(slots map[string]interface{}) (err error) {
 		err = fmt.Errorf("%s\n%s %d: Log ERROR error", err.Error(), f, l)
 		return
 	}
-	l.error_.Println(buf.String())
+	l.eRRor.Println(buf.String())
 	return
 }
 
@@ -255,7 +255,7 @@ func New() *Log {
 		formatter: new(baseLog),
 		debug:     newDEBUG(os.Stdout),
 		info:      newINFO(os.Stdout),
-		error_:    newERROR(os.Stderr),
+		eRRor:     newERROR(os.Stderr),
 		trace:     newTRACE(os.Stdout),
 		fatal:     newFATAL(os.Stderr),
 	}
