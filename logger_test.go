@@ -96,11 +96,11 @@ func TestLog_DEBUG(t *testing.T) {
 
 	type fields struct {
 		formatter formatter
-		debug     Logger
-		info      Logger
-		error_    Logger
-		trace     Logger
-		fatal     Logger
+		debug     LoggerLevel
+		info      LoggerLevel
+		error_    LoggerLevel
+		trace     LoggerLevel
+		fatal     LoggerLevel
 	}
 	type args struct {
 		slots map[string]interface{}
@@ -156,11 +156,11 @@ func TestLog_INFO(t *testing.T) {
 
 	type fields struct {
 		formatter formatter
-		debug     Logger
-		info      Logger
-		error_    Logger
-		trace     Logger
-		fatal     Logger
+		debug     LoggerLevel
+		info      LoggerLevel
+		error_    LoggerLevel
+		trace     LoggerLevel
+		fatal     LoggerLevel
 	}
 	type args struct {
 		slots map[string]interface{}
@@ -224,11 +224,11 @@ func TestLog_ERROR(t *testing.T) {
 
 	type fields struct {
 		formatter formatter
-		debug     Logger
-		info      Logger
-		error_    Logger
-		trace     Logger
-		fatal     Logger
+		debug     LoggerLevel
+		info      LoggerLevel
+		error_    LoggerLevel
+		trace     LoggerLevel
+		fatal     LoggerLevel
 	}
 	type args struct {
 		slots map[string]interface{}
@@ -292,11 +292,11 @@ func TestLog_TRACE(t *testing.T) {
 
 	type fields struct {
 		formatter formatter
-		debug     Logger
-		info      Logger
-		error_    Logger
-		trace     Logger
-		fatal     Logger
+		debug     LoggerLevel
+		info      LoggerLevel
+		error_    LoggerLevel
+		trace     LoggerLevel
+		fatal     LoggerLevel
 	}
 	type args struct {
 		slots map[string]interface{}
@@ -371,11 +371,11 @@ func TestLog_FATAL(t *testing.T) {
 
 	type fields struct {
 		formatter formatter
-		debug     Logger
-		info      Logger
-		error_    Logger
-		trace     Logger
-		fatal     Logger
+		debug     LoggerLevel
+		info      LoggerLevel
+		error_    LoggerLevel
+		trace     LoggerLevel
+		fatal     LoggerLevel
 	}
 	type args struct {
 		slots map[string]interface{}

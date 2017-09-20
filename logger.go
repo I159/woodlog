@@ -1,5 +1,5 @@
 /*
-Package WoodLog is a logger downed from wood.
+Package woodlog is a logger downed from wood.
 
 WoodLog is ridiculously simple structured and leveled logger  based on stdlib `log` package.
 WoodLog is not lightning fast neither it doesn't produce extra complicated logs structure.
@@ -100,8 +100,9 @@ import (
 	"strconv"
 )
 
-// Low level logger
-type Logger interface {
+// LoggerLevel interface contains only the must methods for implementetion
+// of logger levels.
+type LoggerLevel interface {
 	// All required low level log methods
 	Fatal(v ...interface{})
 	Println(v ...interface{})
@@ -146,18 +147,16 @@ func (l *baseLog) FormatSlots(slots map[string]interface{}) (buf *bytes.Buffer, 
 	return
 }
 
-// Log.
-// Composition of loggers of different levels. Each logger satisfies `Logger` interface
-// and could be replaced with a custom object statisfying the interface.
+// Log is a composition of loggers of different levels. Each logger satisfies `Logger` interface
+// and could be replaced with a custom object satisfying the interface.
 type Log struct {
 	formatter
 
-	// Separate log.Logger instance for each log level.
-	debug  Logger
-	info   Logger
-	error_ Logger
-	trace  Logger
-	fatal  Logger
+	debug  LoggerLevel
+	info   LoggerLevel
+	error_ LoggerLevel
+	trace  LoggerLevel
+	fatal  LoggerLevel
 }
 
 // DEBUG level.
@@ -230,23 +229,23 @@ func (l *Log) FATAL(slots map[string]interface{}) (err error) {
 	return
 }
 
-func newDEBUG(wr io.Writer) Logger {
+func newDEBUG(wr io.Writer) LoggerLevel {
 	return log.New(wr, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
 }
 
-func newINFO(wr io.Writer) Logger {
+func newINFO(wr io.Writer) LoggerLevel {
 	return log.New(wr, "INFO: ", log.Lmicroseconds|log.Lshortfile)
 }
 
-func newERROR(wr io.Writer) Logger {
+func newERROR(wr io.Writer) LoggerLevel {
 	return log.New(wr, "ERROR: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
 }
 
-func newTRACE(wr io.Writer) Logger {
+func newTRACE(wr io.Writer) LoggerLevel {
 	return log.New(wr, "TRACE: ", log.Lmicroseconds|log.Lshortfile)
 }
 
-func newFATAL(wr io.Writer) Logger {
+func newFATAL(wr io.Writer) LoggerLevel {
 	return log.New(wr, "FATAL: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
 }
 
