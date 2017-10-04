@@ -253,10 +253,11 @@ func newFATAL(wr io.Writer) Logger {
 // New logger
 func New() *Log {
 	return &Log{
-		debug:  newDEBUG(os.Stdout),
-		info:   newINFO(os.Stdout),
-		error_: newERROR(os.Stderr),
-		trace:  newTRACE(os.Stdout),
-		fatal:  newFATAL(os.Stderr),
+		formatter: new(baseLog),
+		debug:     newDEBUG(os.Stdout),
+		info:      newINFO(os.Stdout),
+		error_:    newERROR(os.Stderr),
+		trace:     newTRACE(os.Stdout),
+		fatal:     newFATAL(os.Stderr),
 	}
 }
