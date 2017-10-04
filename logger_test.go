@@ -47,7 +47,7 @@ func Test_baseLog_writeKV(t *testing.T) {
 	}
 }
 
-func Test_baseLog_formatSlots(t *testing.T) {
+func Test_baseLogFormatSlots(t *testing.T) {
 	type args struct {
 		slots map[string]interface{}
 	}
@@ -68,13 +68,13 @@ func Test_baseLog_formatSlots(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			l := &baseLog{}
-			gotBuf, err := l.formatSlots(tt.args.slots)
+			gotBuf, err := l.FormatSlots(tt.args.slots)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("baseLog.formatSlots() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("baseLog.FormatSlots() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(gotBuf, tt.wantBuf) {
-				t.Errorf("baseLog.formatSlots() = %v, want %v", gotBuf, tt.wantBuf)
+				t.Errorf("baseLog.FormatSlots() = %v, want %v", gotBuf, tt.wantBuf)
 			}
 		})
 	}
@@ -82,7 +82,7 @@ func Test_baseLog_formatSlots(t *testing.T) {
 
 type mockFailFormatter struct{}
 
-func (m *mockFailFormatter) formatSlots(map[string]interface{}) (b *bytes.Buffer, err error) {
+func (m *mockFailFormatter) FormatSlots(map[string]interface{}) (b *bytes.Buffer, err error) {
 	b = bytes.NewBuffer([]byte{})
 	err = errors.New("")
 	return
