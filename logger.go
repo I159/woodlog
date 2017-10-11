@@ -141,13 +141,12 @@ func (l *Log) FATAL(slots map[string]interface{}) (err error) {
 }
 
 // New logger
-func New(level string) (logger *Log, err error) {
-	logger = &Log{
+func New() *Log {
+	return &Log{
 		debug:  log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
 		info:   log.New(os.Stdout, "INFO: ", log.Lmicroseconds|log.Lshortfile),
 		error_: log.New(os.Stderr, "ERROR: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
 		trace:  log.New(os.Stdout, "TRACE: ", log.Lmicroseconds|log.Lshortfile),
 		fatal:  log.New(os.Stderr, "FATAL", log.Ldate|log.Lmicroseconds|log.Llongfile),
 	}
-	return
 }
