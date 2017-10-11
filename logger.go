@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"runtime"
@@ -145,13 +146,33 @@ func (l *Log) FATAL(slots map[string]interface{}) (err error) {
 	return
 }
 
+func newDEBUG(wr io.Writer) Logger {
+	return log.New(wr, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
+}
+
+func newINFO(wr io.Writer) Logger {
+	return log.New(wr, "INFO: ", log.Lmicroseconds|log.Lshortfile)
+}
+
+func newERROR(wr io.Writer) Logger {
+	return log.New(wr, "ERROR: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
+}
+
+func newTRACE(wr io.Writer) Logger {
+	return log.New(wr, "TRACE: ", log.Lmicroseconds|log.Lshortfile)
+}
+
+func newFATAL(wr io.Writer) Logger {
+	return log.New(wr, "FATAL: ", log.Ldate|log.Lmicroseconds|log.Llongfile)
+}
+
 // New logger
 func New() *Log {
 	return &Log{
-		debug:  log.New(os.Stdout, "DEBUG: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
-		info:   log.New(os.Stdout, "INFO: ", log.Lmicroseconds|log.Lshortfile),
-		error_: log.New(os.Stderr, "ERROR: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
-		trace:  log.New(os.Stdout, "TRACE: ", log.Lmicroseconds|log.Lshortfile),
-		fatal:  log.New(os.Stderr, "FATAL", log.Ldate|log.Lmicroseconds|log.Llongfile),
+		debug:  newDEBUG(os.Stdout),
+		info:   newINFO(os.Stdout),
+		error_: newERROR(os.Stderr),
+		trace:  newTRACE(os.Stdout),
+		fatal:  newFATAL(os.Stderr),
 	}
 }
