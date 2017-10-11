@@ -16,13 +16,15 @@ import (
 	"strconv"
 )
 
-// Public logger interface. 
+// Low level logger
 type Logger interface {
-	DEBUG(map[string]interface{}) error
-	INFO(map[string]interface{}) error
-	ERROR(map[string]interface{}) error
-	FATAL(map[string]interface{}) error
-	TRACE(map[string]interface{}) error
+	// All required low level log methods
+	Fatal(v ...interface{})
+	Println(v ...interface{})
+}
+
+type formatter interface {
+	formatSlots(map[string]interface{}) (*bytes.Buffer, error)
 }
 
 // Base logger. Implements log structure format
