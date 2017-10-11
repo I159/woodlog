@@ -40,7 +40,7 @@ func (l *baseLog) writeKV(b *bytes.Buffer, k, v string) {
 
 // formatSlots recursively formats log structure from slots.
 // Returns buffer containing formatted log payload.
-func (l *baseLog) formatSlots(slots map[string]interface{}) (err error, buf *bytes.Buffer) {
+func (l *baseLog) formatSlots(slots map[string]interface{}) (buf *bytes.Buffer, err error) {
 	var b bytes.Buffer
 	for k, v := range slots {
 		switch t := v.(type) {
@@ -60,21 +60,21 @@ func (l *baseLog) formatSlots(slots map[string]interface{}) (err error, buf *byt
 
 // Logger constructor.
 type Log struct {
-	baseLog
+	formatter
 
 	// Separate log.Logger instance for each log level.
-	debug  *log.Logger
-	info   *log.Logger
-	error_ *log.Logger
-	trace  *log.Logger
-	fatal  *log.Logger
+	debug  Logger
+	info   Logger
+	error_ Logger
+	trace  Logger
+	fatal  Logger
 }
 
 // DEBUG level.
 // Uses stdout as output file. Contains prefix "DEBUG", the date in the local time zone: 2009/01/23,
 // microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
 func (l *Log) DEBUG(slots map[string]interface{}) (err error) {
-	err, buf := l.formatSlots(slots)
+	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
 		err = fmt.Errorf("%s\n%s %s: Log DEBUG error.", err.Error(), f, l)
@@ -88,7 +88,7 @@ func (l *Log) DEBUG(slots map[string]interface{}) (err error) {
 // Uses stdout as output file. Contains prefix "INFO", microsecond resolution: 01:23:23.123123,
 // final file name element and line number: d.go:23
 func (l *Log) INFO(slots map[string]interface{}) (err error) {
-	err, buf := l.formatSlots(slots)
+	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
 		err = fmt.Errorf("%s\n%s %s: Log INFO error.", err.Error(), f, l)
@@ -102,7 +102,7 @@ func (l *Log) INFO(slots map[string]interface{}) (err error) {
 // Uses stderr as output file. Contains prefix "ERROR", the date in the local time zone: 2009/01/23,
 // microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
 func (l *Log) ERROR(slots map[string]interface{}) (err error) {
-	err, buf := l.formatSlots(slots)
+	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
 		err = fmt.Errorf("%s\n%s %s: Log ERROR error.", err.Error(), f, l)
@@ -116,7 +116,7 @@ func (l *Log) ERROR(slots map[string]interface{}) (err error) {
 // Uses stdout as output file. Contains prefix "TRACE", microsecond resolution: 01:23:23.123123,
 // final file name element and line number: d.go:23
 func (l *Log) TRACE(slots map[string]interface{}) (err error) {
-	err, buf := l.formatSlots(slots)
+	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
 		err = fmt.Errorf("%s\n%s %s: Log TRACE error.", err.Error(), f, l)
@@ -130,7 +130,7 @@ func (l *Log) TRACE(slots map[string]interface{}) (err error) {
 // Uses stderr as output file and exits with code 1 after logging. Contains prefix "FATAL", the date in the local time zone: 2009/01/23,
 // microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
 func (l *Log) FATAL(slots map[string]interface{}) (err error) {
-	err, buf := l.formatSlots(slots)
+	buf, err := l.formatSlots(slots)
 	if err != nil {
 		_, f, l, _ := runtime.Caller(0)
 		err = fmt.Errorf("%s\n%s %s: Log FATAL error.", err.Error(), f, l)
