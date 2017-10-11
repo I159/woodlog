@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-// Public interface to extend existing functional
+// Public logger interface. 
 type Logger interface {
 	DEBUG(map[string]interface{}) error
 	INFO(map[string]interface{}) error
@@ -26,11 +26,11 @@ type Logger interface {
 }
 
 // Base logger. Implements log structure format
-type BaseLog struct{}
+type baseLog struct{}
 
 // writeKV Writes structure key and casted value to a buffer.
 // Returns formated dtructure field.
-func (l *BaseLog) writeKV(b *bytes.Buffer, k, v string) {
+func (l *baseLog) writeKV(b *bytes.Buffer, k, v string) {
 	b.WriteString(k)
 	b.WriteString(": ")
 	b.WriteString(v)
@@ -38,7 +38,7 @@ func (l *BaseLog) writeKV(b *bytes.Buffer, k, v string) {
 
 // formatSlots recursively formats log structure from slots.
 // Returns buffer containing formatted log payload.
-func (l *BaseLog) formatSlots(slots map[string]interface{}) (err error, buf *bytes.Buffer) {
+func (l *baseLog) formatSlots(slots map[string]interface{}) (err error, buf *bytes.Buffer) {
 	var b bytes.Buffer
 	for k, v := range slots {
 		switch t := v.(type) {
@@ -56,11 +56,11 @@ func (l *BaseLog) formatSlots(slots map[string]interface{}) (err error, buf *byt
 	return
 }
 
-// Logger implementation
+// Logger constructor.
 type Log struct {
-	BaseLog
+	baseLog
 
-	// Separate log.Logger instance for each log level
+	// Separate log.Logger instance for each log level.
 	debug  *log.Logger
 	info   *log.Logger
 	error_ *log.Logger
