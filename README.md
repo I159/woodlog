@@ -34,36 +34,40 @@ system of levels and map to pass a key-value structure of logged
 arguments to the logger instance. Let's say you have an http server and
 you want to bring some transparency to it:
 
-	package main
+     package main
 
-	import (
-		"fmt"
-		"html"
-		"net/http"
+     import (
+         "fmt"
+         "html"
+         "net/http"
 
-		"github.com/I159/woodlog"
-	)
+         "github.com/I159/woodlog"
+     )
 
-	var logger *woodlog.Logger = woodlog.New()
+     var logger *woodlog.Log = woodlog.New()
 
-	func handler(w http.ResponseWriter, r *http.Request) {
-		logger.TRACE(map[string]interface{}{"Request state": "received"})
-		logger.INFO(map[string]interface{}{"Requested url": "/bar"})
+     func importantFunc() (int , error) {
+         return 0, nil
+     }
 
-		if num, err := importantFunc(); err == nil {
-			logger.DEBUG(map[string]interface{}{"Incoming word number": num})
-			fmt.Fprintf(w, "Hello, %q #%d", html.EscapeString(r.URL.Path), num)
-		} else {
-			logger.ERROR(map[string]interface{}{"Error": err, "Occured in": "importantFunc"})
-		}
+     func handler(w http.ResponseWriter, r *http.Request) {
+         logger.TRACE(map[string]interface{}{"Request state": "Received"})
+         logger.INFO(map[string]interface{}{"Requested url": "/bar"})
 
-		logger.TRACE(map[string]interface{}{"Request state": "jesponded"})
-	}
+         if num, err := importantFunc(); err == nil {
+             logger.DEBUG(map[string]interface{}{"Incoming number": num})
+             fmt.Fprintf(w, "Hello, %q #%d", html.EscapeString(r.URL.Path), num)
+         } else {
+             logger.ERROR(map[string]interface{}{"Error": err, "Occured in": "importantFunc"})
+         }
 
-	func main() {
-		http.HandleFunc("/bar", handler)
-		logger.Fatal(map[string]interface{}{"Server stopped due to": http.ListenAndServe(":8080", nil)})
-	}
+         logger.TRACE(map[string]interface{}{"Request state": "Responded"})
+     }
+
+     func main() {
+         http.HandleFunc("/bar", handler)
+         http.ListenAndServe(":8080", nil)
+     }
 
 ## Advanced usage and custom loggers
 
@@ -71,29 +75,45 @@ If existing granularity of levels is not enough you can implement your
 own logger based on `formatter` interface. See `Logger` interface
 documentation for details.
 
-	type CustomLog struct {
-		*Log
-		panic *Logger
-	}
+    package main
 
-	func (l *CustomLog) PANIC(slots map[string]interface{}) (err error) {
-		buf, err := l.FormatSlots(slots)
-		if err != nil {
-			_, f, l, _ := runtime.Caller(0)
-			err = fmt.Errorf("%s\n%s %d: Log DEBUG error.", err.Error(), f, l)
-			return
-		}
-		defer panic(buf.String())
-		l.panic.Println(buf.String())
-		return
-	}
+    import (
+        "fmt"
+        "log"
+        "os"
+        "runtime"
 
-	func newCustomLogger() *CustomLog {
-		return &CustomLog{
-			woodlog.New(),
-			log.New(wr, "PANIC: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
-		}
-	}
+        "github.com/I159/woodlog"
+    )
+
+    type CustomLog struct {
+        *woodlog.Log
+        panic woodlog.LoggerLevel
+    }
+
+    func (l *CustomLog) PANIC(slots map[string]interface{}) (err error) {
+        buf, err := l.FormatSlots(slots)
+        if err != nil {
+            _, f, l, _ := runtime.Caller(0)
+            err = fmt.Errorf("%s\n%s %d: Log DEBUG error.", err.Error(), f, l)
+            return
+        }
+        defer panic(buf.String())
+        l.panic.Println()
+        return
+    }
+
+    func newCustomLogger() *CustomLog {
+        return &CustomLog{
+            woodlog.New(),
+            log.New(os.Stderr, "PANIC: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+        }
+    }
+
+    func main() {
+        logger := newCustomLogger()
+        logger.PANIC(map[string]interface{}{"Cause of a panic": "Zombie! Zombies are everywhere!"}
+    }
 
 ## API reference
 

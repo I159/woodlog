@@ -37,35 +37,50 @@ Let's say you have an http server and you want to bring some transparency to it:
 		"github.com/I159/woodlog"
 	)
 
-	var logger *woodlog.Logger = woodlog.New()
+	var logger *woodlog.Log = woodlog.New()
+
+	func importantFunc() (int , error) {
+		return 0, nil
+	}
 
 	func handler(w http.ResponseWriter, r *http.Request) {
-		logger.TRACE(map[string]interface{}{"Request state": "received"})
+		logger.TRACE(map[string]interface{}{"Request state": "Received"})
 		logger.INFO(map[string]interface{}{"Requested url": "/bar"})
 
 		if num, err := importantFunc(); err == nil {
-			logger.DEBUG(map[string]interface{}{"Incoming word number": num})
+			logger.DEBUG(map[string]interface{}{"Incoming number": num})
 			fmt.Fprintf(w, "Hello, %q #%d", html.EscapeString(r.URL.Path), num)
 		} else {
 			logger.ERROR(map[string]interface{}{"Error": err, "Occured in": "importantFunc"})
 		}
 
-		logger.TRACE(map[string]interface{}{"Request state": "jesponded"})
+		logger.TRACE(map[string]interface{}{"Request state": "Responded"})
 	}
 
 	func main() {
 		http.HandleFunc("/bar", handler)
-		logger.Fatal(map[string]interface{}{"Server stopped due to": http.ListenAndServe(":8080", nil)})
+		http.ListenAndServe(":8080", nil)
 	}
 
-## Advanced usage and custom
+## Advanced usage and custom loggers
 
 If existing granularity of levels is not enough you can implement your own logger based on `formatter` interface.
 See `Logger` interface documentation for details.
 
+	package main                                                                                    
+
+	import (
+		"fmt"
+		"log"
+		"os"
+		"runtime"
+
+		"github.com/I159/woodlog"
+	)
+
 	type CustomLog struct {
-		*Log
-		panic *Logger
+		*woodlog.Log
+		panic woodlog.LoggerLevel
 	}
 
 	func (l *CustomLog) PANIC(slots map[string]interface{}) (err error) {
@@ -76,15 +91,20 @@ See `Logger` interface documentation for details.
 			return
 		}
 		defer panic(buf.String())
-		l.panic.Println(buf.String())
+		l.panic.Println()
 		return
 	}
 
 	func newCustomLogger() *CustomLog {
 		return &CustomLog{
 			woodlog.New(),
-			log.New(wr, "PANIC: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
+			log.New(os.Stderr, "PANIC: ", log.Ldate|log.Lmicroseconds|log.Llongfile),
 		}
+	}
+
+	func main() {
+		logger := newCustomLogger()
+		logger.PANIC(map[string]interface{}{"Cause of a panic": "Zombie! Zombies are everywhere!"})
 	}
 */
 package woodlog
