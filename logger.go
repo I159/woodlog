@@ -179,14 +179,24 @@ type Log struct {
 	fatal LoggerLevel
 }
 
+
+// TODO: refactor all the log methods wuth this generalization function
+func (l *Log) fillBuffer(tmpl string, slots map[string]interface{}) (buf fmt.Stringer, err error) {
+	buf, err = l.FormatSlots(slots)
+	if err != nil {
+		_, f, l, _ := runtime.Caller(0)
+		err = fmt.Errorf("%s\n%s %d: Log DEBUG error", err.Error(), f, l)
+	}
+	return
+}
+
+
 // DEBUG level.
 // Uses stdout as output file. Contains prefix "DEBUG", the date in the local time zone: 2009/01/23,
 // microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
 func (l *Log) DEBUG(slots map[string]interface{}) (err error) {
-	buf, err := l.FormatSlots(slots)
+	buf, err := l.fillBuffer("%s\n%s %d: Log DEBUG error", slots)
 	if err != nil {
-		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log DEBUG error", err.Error(), f, l)
 		return
 	}
 	l.debug.Println(buf.String())
@@ -197,10 +207,8 @@ func (l *Log) DEBUG(slots map[string]interface{}) (err error) {
 // Uses stdout as output file. Contains prefix "INFO", microsecond resolution: 01:23:23.123123,
 // final file name element and line number: d.go:23
 func (l *Log) INFO(slots map[string]interface{}) (err error) {
-	buf, err := l.FormatSlots(slots)
+	buf, err := l.fillBuffer("%s\n%s %d: Log INFO error", slots)
 	if err != nil {
-		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log INFO error", err.Error(), f, l)
 		return
 	}
 	l.info.Println(buf.String())
@@ -211,10 +219,8 @@ func (l *Log) INFO(slots map[string]interface{}) (err error) {
 // Uses stderr as output file. Contains prefix "ERROR", the date in the local time zone: 2009/01/23,
 // microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
 func (l *Log) ERROR(slots map[string]interface{}) (err error) {
-	buf, err := l.FormatSlots(slots)
+	buf, err := l.fillBuffer("%s\n%s %d: Log ERROR error", slots)
 	if err != nil {
-		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log ERROR error", err.Error(), f, l)
 		return
 	}
 	l.eRRor.Println(buf.String())
@@ -225,10 +231,8 @@ func (l *Log) ERROR(slots map[string]interface{}) (err error) {
 // Uses stdout as output file. Contains prefix "TRACE", microsecond resolution: 01:23:23.123123,
 // final file name element and line number: d.go:23
 func (l *Log) TRACE(slots map[string]interface{}) (err error) {
-	buf, err := l.FormatSlots(slots)
+	buf, err := l.fillBuffer("%s\n%s %d: Log TRACE error", slots)
 	if err != nil {
-		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log TRACE error", err.Error(), f, l)
 		return
 	}
 	l.trace.Println(buf.String())
@@ -239,10 +243,8 @@ func (l *Log) TRACE(slots map[string]interface{}) (err error) {
 // Uses stderr as output file and exits with code 1 after logging. Contains prefix "FATAL", the date in the local time zone: 2009/01/23,
 // microsecond resolution: 01:23:23.123123, full file name and line number: /a/b/c/d.go:23.
 func (l *Log) FATAL(slots map[string]interface{}) (err error) {
-	buf, err := l.FormatSlots(slots)
+	buf, err := l.fillBuffer("%s\n%s %d: Log FATAL error", slots)
 	if err != nil {
-		_, f, l, _ := runtime.Caller(0)
-		err = fmt.Errorf("%s\n%s %d: Log FATAL error", err.Error(), f, l)
 		return
 	}
 	l.fatal.Fatal(buf.String())
